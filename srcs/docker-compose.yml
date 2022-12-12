@@ -1,0 +1,66 @@
+version: "3"
+
+services:
+  mariadb:
+    build: ./requirements/mariadb
+    container_name: "mariadb"
+    image: mariadb # si utilise avec docker-compose build, on rename l'image. Si utilise avec docker pull, on pull l'image existante
+    env_file:
+      - ./.env
+    ports: 
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - inception
+    restart: on-failure
+
+  wordpress:
+    build: ./requirements/wordpress
+    container_name: "wordpress"
+    image: "wordpress"
+    env_file:
+      - ./.env
+    ports:
+      - "9000:9000"
+    depends_on:
+      - mariadb
+    volumes:
+      - wp_data:/var/www/html
+    networks:
+      - inception
+    restart: on-failure
+
+  nginx:
+    build: ./requirements/nginx
+    container_name: "nginx"
+    image: "nginx"
+    ports:
+      -  "443:443"
+    depends_on:
+      - wordpress
+    volumes:
+      - wp_data:/var/www/html
+    networks:
+      - inception
+    restart: on-failure
+
+volumes:
+  db_data:
+    name: "db_data"
+    driver: local
+    driver_opts:
+      type: none
+      device : /home/ormartin/data/db_data
+      o: bind
+ 
+  wp_data:
+    name: "wp_data"
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/ormartin/data/wp_data
+      o: bind
+
+networks:
+  inception:
