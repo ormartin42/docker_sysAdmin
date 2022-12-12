@@ -40,6 +40,6 @@
   Contact
 </h2>
 <p align="center">
-  <a href="mailto:ormartin@student.42.fr">ormartin@student.42.fr</a>
+  <a href="mailto:orianemartinpro@gmail.com">orianemartinpro@gmail.com</a>
 </p>
 
